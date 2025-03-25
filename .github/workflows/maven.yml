@@ -63,7 +63,7 @@ jobs:
 
     - name: Push Docker Image to Docker Hub
       run: |
-        docker tag myapp:${{ env.NEW_VERSION }} myusername/myapp:${{ env.NEW_VERSION }}
+        docker tag myapp:${{ env.NEW_VERSION }} hilelsagi/myapp:${{ env.NEW_VERSION }}
         docker push hilelsagi/myapp:${{ env.NEW_VERSION }}
 
     - name: Upload Artifact
