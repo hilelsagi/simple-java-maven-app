@@ -80,7 +80,7 @@ jobs:
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
       run: |
-        echo "$PRIVATE_KEY" > KEY.pem && chmod 600 KEY.pem
+        echo "$PRIVATE_KEY" > KEY.pem && chmod 600 KEY.pem '
         ssh -i KEY.pem ubuntu@51.21.170.193 
         # Install Docker (if not installed)
         sudo apt-get update
@@ -98,4 +98,4 @@ jobs:
 
         # Run the new container
         docker run -d --name myapp-container -p 8080:8080 hilelsagi/myapp:${{ env.NEW_VERSION }}
-        EOF
+        '
