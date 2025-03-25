@@ -4,13 +4,35 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "master" ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Read Version File
+      id: get_version
+      run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+
+    - name: Increment Patch Version
+      id: update_version
+      run: |
+        OLD_VERSION=$(cat VERSION)
+        BASE_VERSION=$(echo $OLD_VERSION | cut -d'.' -f1,2)
+        PATCH_VERSION=$(echo $OLD_VERSION | cut -d'.' -f3)
+        NEW_VERSION="$BASE_VERSION.$((PATCH_VERSION + 1))"
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        echo $NEW_VERSION > VERSION
+
+    - name: Commit Updated Version
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add VERSION
+        git commit -m "Bump version to ${{ env.NEW_VERSION }} [skip ci]"
+        git push
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -18,10 +40,17 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Update Maven Version
+      run: mvn versions:set -DnewVersion=${{ env.NEW_VERSION }}
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Maven Version Bump Action
-      uses: nnichols/maven-version-bump-action@v5
+
+    - name: Rename JAR with Version
+      run: |
+        JAR_NAME=$(ls target/*.jar | grep -v "original" | head -n 1)
+        mv $JAR_NAME target/myapp-${{ env.NEW_VERSION }}.jar
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
