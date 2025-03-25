@@ -78,7 +78,7 @@ jobs:
 
     - name: SSH into EC2 and Deploy Docker Image
       run: |
-        ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_PRIVATE_KEY }} ubuntu@51.20.18.112 << EOF
+        ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_PRIVATE_KEY }} ubuntu@51.21.170.193 << EOF
         # Install Docker (if not installed)
         sudo apt-get update
         sudo apt-get install -y docker.io
