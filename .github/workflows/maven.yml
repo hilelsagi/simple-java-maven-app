@@ -79,20 +79,20 @@ jobs:
     - name: SSH into EC2 and Deploy Docker Image
       run: |
         ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_PRIVATE_KEY }} ubuntu@51.20.18.112 << EOF
-          # Install Docker (if not installed)
-          sudo apt-get update
-          sudo apt-get install -y docker.io
-          sudo systemctl start docker.service 
-          # Log in to Docker Hub
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        # Install Docker (if not installed)
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+        sudo systemctl start docker.service 
+        # Log in to Docker Hub
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-          # Pull the Docker image from Docker Hub
-          docker pull hilelsagi/myapp:${{ env.NEW_VERSION }}
+        # Pull the Docker image from Docker Hub
+        docker pull hilelsagi/myapp:${{ env.NEW_VERSION }}
 
-          # Stop any running container (optional, depending on your needs)
-          docker stop myapp-container || true
-          docker rm myapp-container || true
+        # Stop any running container (optional, depending on your needs)
+        docker stop myapp-container || true
+        docker rm myapp-container || true
 
-          # Run the new container
-          docker run -d --name myapp-container -p 8080:8080 hilelsagi/myapp:${{ env.NEW_VERSION }}
+        # Run the new container
+        docker run -d --name myapp-container -p 8080:8080 hilelsagi/myapp:${{ env.NEW_VERSION }}
         EOF
