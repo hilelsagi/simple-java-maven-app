@@ -80,8 +80,8 @@ jobs:
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
       run: |
-        echo "$PRIVATE_KEY" > KEY.pem && chmod 600 KEY.pem '
-        ssh -i KEY.pem ubuntu@51.21.170.193 
+        echo "$PRIVATE_KEY" > KEY.pem && chmod 600 KEY.pem 
+        ssh -i KEY.pem ubuntu@51.21.170.193  '
         # Install Docker (if not installed)
         sudo apt-get update
         sudo apt-get install -y docker.io
