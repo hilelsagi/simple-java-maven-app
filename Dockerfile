@@ -1,6 +1,6 @@
 
 # Stage 1: Build the Java app
-FROM maven:3.9.6-openjdk-17 AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
